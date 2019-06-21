@@ -22,26 +22,32 @@ login_trigger = driver.find_element_by_xpath('//*[@id="app"]/div/div/div[3]/div[
 login_trigger.click()
 
 # 選取所有專題
-project_elems = driver.find_elements_by_xpath('//div[@class="series-list home__list"]/a')
+project_elems = driver.find_elements_by_xpath('//*[@id="app"]/section/div[2]/div/a')
 time.sleep(1)
 
 # 記錄目前視窗
 base_window = driver.current_window_handle
-for project_elem in project_elems:
 
-	# 開新視窗，並把焦點移到新視窗
-	project_elem.click()
-	for window in driver.window_handles:
-		if window != base_window:
-			driver.switch_to_window(window)
-	
-	content_text = driver.find_element_by_xpath('//p[@class="app-content-area"]')
-	print(content_text.text)
+with open("content.txt", "a") as f:
 
-	time.sleep(1)
-	
-	# 關閉視窗，把焦點移回原視窗
-	driver.close()
-	driver.switch_to_window(base_window)
+	for project_elem in project_elems:
+
+		# 開新視窗，並把焦點移到新視窗
+		project_elem.click()
+		for window in driver.window_handles:
+			if window != base_window:
+				driver.switch_to_window(window)
+		
+		content_text = driver.find_element_by_xpath('//p[@class="app-content-area"]')
+		#print(content_text.text)
+		f.writeLine(content_text.text + '\n')
+
+		time.sleep(1)
+		
+		# 關閉視窗，把焦點移回原視窗
+		driver.close()
+		driver.switch_to_window(base_window)
 
 driver.quit()
+
+
